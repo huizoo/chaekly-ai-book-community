@@ -1,17 +1,25 @@
 <template>
   <div class="calendar-wrap">
-    <h4 class="mb-3">📅 읽은 도서 달력</h4>
+    <h4 class="mb-3">📅 독서 달력</h4>
     <v-calendar
       :attributes="calendarData"
       class="responsive-calendar"
       style="width: 100%; min-width: 0; max-width: 100%;"
     >
-      <template #day-content="{ day, attributes }">
+      <template #day-content="slotProps">
         <div>
-          <span class="dayitem">{{ day.day }}</span>
-          <div v-if="attributes && attributes.length">
-            <div v-for="attr in attributes" :key="attr.key">
-               <div v-html="attr.content.base.color" class="item"></div>
+          <span class="dayitem">{{ slotProps.day?.day }}</span>
+          <div v-if="slotProps.attributes?.length">
+            <div v-for="attr in slotProps.attributes" :key="attr.key">
+              <div
+                v-for="item in attr.customData?.content || []"
+                :key="item.id"
+                class="item"
+              >
+                <RouterLink :to="{ name: 'book-detail', params: { bookId: item.id } }" @click="console.log('📚 이동하는 bookId:', item.id)">
+                  📖 {{ item.title }}
+                </RouterLink>
+              </div>
             </div>
           </div>
         </div>
@@ -22,7 +30,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, RouterLink } from 'vue-router'
 import { useAccountStore } from '@/stores/accounts'
 import axios from 'axios'
 import 'v-calendar/style.css'
@@ -50,33 +58,44 @@ onMounted(async () => {
       }
     )
 
-    calendarData.value = res.data.map((item, i) => {
-      let titleArr = Array.isArray(item.titles) ? item.titles : Object.values(item.titles)
-      titleArr = titleArr.map(title =>
-        typeof title === 'string'
-          ? title
-          : (title && typeof title === 'object' && 'title' in title
-                ? title.title
-                : JSON.stringify(title))
-      );
-      titleArr = titleArr.map(title => truncateText(title, 22))
-      // 7. content 미리 확인
-      let contentStr = titleArr.length > 1
-        ? titleArr.map(title => `📖 ${title}`).join('<br>')
-        : `📖 ${titleArr[0]}`
+    calendarData.value = res.data.map((item) => {
+      let titleArr = Array.isArray(item.titles)
+        ? item.titles
+        : Object.values(item.titles || {})
+
+      let idArr = Array.isArray(item.book_ids)
+        ? item.book_ids
+        : Object.values(item.book_ids || {})
+
+
+      let contentArr = titleArr.map((title, index) => {
+        const cleanTitle =
+          typeof title === 'string'
+            ? truncateText(title, 22)
+            : (title && typeof title === 'object' && 'title' in title
+                  ? truncateText(title.title, 22)
+                  : truncateText(JSON.stringify(title), 22))
+
+        return {
+          title: cleanTitle,
+          id: idArr[index] ?? -1
+        }
+      })
 
       return {
         key: item.date,
         dates: new Date(item.date),
         popover: {
-          label: titleArr.length > 1
-            ? titleArr.map(title => `- ${title}`).join('<br>')
-            : `- ${titleArr[0]}`,
+          label: contentArr.length > 1
+            ? contentArr.map(item => `- ${item.title}`).join('<br>')
+            : `- ${contentArr[0]?.title || ''}`,
           visibility: 'hover'
         },
-        content: contentStr
+        customData: {
+          content: contentArr
+        }
       }
-    });
+    })
   } catch (err) {
     console.error(err)
   }
@@ -84,13 +103,6 @@ onMounted(async () => {
 </script>
 
 <style>
-/* .calendar-wrap {
-  width: 800px;
-  margin: 0 auto;
-  padding-right: 2rem;
-} */
-
-/* 달력 자체를 가로 100%로 */
 .responsive-calendar {
   width: 100%;
 }
@@ -99,9 +111,22 @@ onMounted(async () => {
   height: 100px;
 }
 
-
-
 .item {
   font-size: small;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
+
+.item a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.item a:hover {
+  text-decoration: underline;
 }
 </style>

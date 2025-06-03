@@ -37,8 +37,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
         from django.db.models import Count
 
         threads = Thread.objects.filter(user=obj).annotate(
-            like_count=Count('like_users'),
-            comment_count=Count('comments')
+            like_count=Count('like_users', distinct=True),
+            comment_count=Count('comments', distinct=True)
         ).order_by('-created_at')
         return ThreadListSerializer(threads, many=True, context=self.context).data
 

@@ -1,7 +1,5 @@
 <template>
-
   <UserSignUp />
-
 </template>
 
 <script setup>

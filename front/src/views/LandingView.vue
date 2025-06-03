@@ -28,8 +28,9 @@
     </div>
     <p class="fixed-bottom-text">Chaekly</p>
   </div>
-
-  <BestSellers />
+  <div class="container">
+    <BestSellers />
+  </div>
 </template>
 
 <script setup>

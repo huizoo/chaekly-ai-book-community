@@ -58,7 +58,6 @@ import Swal from "sweetalert2";
 const router = useRouter();
 
 const form = ref({
-  // old_password: "",
   new_password1: "",
   new_password2: "",
 });
@@ -83,7 +82,6 @@ const onSubmit = async () => {
     if (err?.response?.data) {
       const data = err.response.data;
       error.value =
-        // data.old_password?.[0] ||
         data.new_password1?.[0] ||
         data.new_password2?.[0] ||
         data.non_field_errors?.[0] ||

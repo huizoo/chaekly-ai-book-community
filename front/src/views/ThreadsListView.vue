@@ -6,12 +6,7 @@
 </template>
 
 <script setup>
-import ThreadList from '@/components/thread/ThreadList.vue'
-
+import ThreadList from "@/components/thread/ThreadList.vue";
 </script>
 
-<style scoped>
-.container {
-  width: 1280px;
-}
-</style>
+<style scoped></style>

@@ -67,13 +67,22 @@ def read_books_calendar(request, username):
     user = User.objects.get(username=username)
     threads = Thread.objects.filter(user=user, read_date__isnull=False).select_related('book')
     books_by_date = {}
+    book_ids_by_date = {}
+
     for t in threads:
         date = t.read_date.strftime('%Y-%m-%d')
-        # 반드시 book의 title이 들어가야 한다!!
         if t.book and t.book.title:
             books_by_date.setdefault(date, []).append(str(t.book.title))
-    result = [{'date': date, 'titles': titles} for date, titles in books_by_date.items()]
-    print(result)
+            book_ids_by_date.setdefault(date, []).append(t.book.id)
+
+    result = [
+        {
+            'date': date,
+            'titles': books_by_date[date],
+            'book_ids': book_ids_by_date.get(date, [])
+        }
+        for date in books_by_date
+    ]
     return Response(result)
 
 

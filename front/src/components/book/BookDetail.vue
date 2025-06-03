@@ -184,7 +184,7 @@ onMounted(async () => {
   min-width: 700px;
   max-width: 900px;
   /* height: 800px; */
-  margin: 0 auto;
+  margin: 2rem auto;
   padding: 1rem;
   /* background: #f9f9f9; */
   /* background: #fffaf5; */

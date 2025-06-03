@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="visibleThreads.length">
     <ul>
       <li
         v-for="thread in visibleThreads"
@@ -10,6 +10,9 @@
       </li>
     </ul>
   </div>
+  <div v-else>
+    작성한 쓰레드가 없습니다.
+  </div>
 </template>
 
 <script setup>
@@ -19,7 +22,6 @@ import { useAccountStore } from "@/stores/accounts.js";
 const accountStore = useAccountStore();
 
 const isMe = computed(() => {
-  // 두 값이 모두 존재하고, id가 일치하면 내 프로필
   return (
     accountStore.myInfo &&
     accountStore.userProfile &&

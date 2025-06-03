@@ -6,11 +6,7 @@
 </template>
 
 <script setup>
-import BookList from "@/components/book/BookList.vue"
+import BookList from "@/components/book/BookList.vue";
 </script>
 
-<style scoped>
-.container {
-  width: 1280px;
-}
-</style>
+<style scoped></style>

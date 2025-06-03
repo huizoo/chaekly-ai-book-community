@@ -2,7 +2,7 @@
   <div class="profile-page-wrapper">
     <div class="profile-content">
 
-      <!-- ===== 왼쪽: 프로필 카드 ===== -->
+      <!-- 왼쪽: 프로필 카드 -->
       <aside class="profile-aside">
         <!-- 프로필 이미지 -->
         <div class="profile-img-box">
@@ -39,7 +39,7 @@
         </div>
       </aside>
 
-      <!-- ===== 오른쪽: 탭 + 컨텐츠 ===== -->
+      <!-- 오른쪽: 탭 + 컨텐츠 -->
       <section class="profile-main">
         <div class="profile-main-inner">
           <h2 class="edit-profile-title">프로필</h2>
@@ -65,7 +65,7 @@
             </button>
           </nav>
 
-          <!-- 탭 내용: 내 서재/쓰레드/달력 -->
+          <!-- 내 서재/쓰레드/달력 -->
           <div class="profile-tab-content">
             <UserLibrary v-if="tab === 'library'" :username="username" :is-me="isMe" />
             <UserThreads v-if="tab === 'threads'" :username="username" :is-me="isMe" />
@@ -97,7 +97,7 @@ const MEDIA_URL = "http://127.0.0.1:8000";
 // MEDIA_URL을 꼭 붙여야 이미지를 제대로 불러옴 (백엔드 경로 사용)
 const imageUrlWithMedia = computed(() => {
   const img = accountStore.userProfile?.profile_image;
-  if (!img) return defaultProfileImage; // 기본 이미지
+  if (!img) return defaultProfileImage;
   if (img.startsWith('http')) return img;
   return MEDIA_URL + img;
 });
@@ -137,18 +137,9 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-/* 전체 레이아웃(왼-오른쪽 2단) */
-/* .profile-page-wrapper {
-  min-height: 85vh;
-  width: 100vw;
-  background: #f2f5fa;
-  padding: 38px 0 55px 0;
-} */
 .profile-content {
-  /* max-width: 950px; */
   margin: 0 auto;
   display: flex;
-  /* gap: 36px; */
   align-items: flex-start;
 }
 
@@ -200,7 +191,6 @@ onMounted(async () => {
   border-radius: 7px;
   padding: 6px 22px;
   margin-top: 0.4rem;
-  /* font-weight: bold; */
   cursor: pointer;
   font-size: 0.85rem;
   transition: background .18s;
@@ -219,14 +209,14 @@ onMounted(async () => {
   font-style: italic;
 }
 .follow-info {
-  margin: 13px 0 0 0;
+  margin: 13px 0 10px 0;
   font-size: 1.05rem;
   display: flex;
   justify-content: center;
   gap: 16px;
 }
 .profile-follow-btn {
-  margin-top: 10px;
+  margin-bottom: 15px;
   text-align: center;
 }
 
@@ -242,7 +232,6 @@ onMounted(async () => {
 .profile-main-inner {
   width: 100%;
   min-width: 320px;
-  /* max-width: 600px; */
   margin: 0 auto;
 }
 .edit-profile-title {

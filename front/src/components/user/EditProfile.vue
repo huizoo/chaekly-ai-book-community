@@ -270,7 +270,6 @@ textarea.form-control::-webkit-scrollbar {
   display: none;
 }
 
-/* === 버튼 공통 스타일 === */
 .btn {
   border-radius: 2rem;
   font-weight: 600;
@@ -281,7 +280,7 @@ textarea.form-control::-webkit-scrollbar {
   width: 100%;
 }
 
-/* === 수정 버튼(빨간 영역, 기본 submit) === */
+/* 수정 버튼 */
 .btn-primary {
   background: linear-gradient(to right, #f7f2c3, #cce9f1);
   color: var(--text-dark);
@@ -293,7 +292,7 @@ textarea.form-control::-webkit-scrollbar {
   filter: none;
 }
 
-/* === 취소 버튼(파란 영역) === */
+/* 취소 버튼 */
 .btn-cancel {
   background: linear-gradient(to right, #e2f3fa, #b0d0fa);
   color: #333;
@@ -306,7 +305,7 @@ textarea.form-control::-webkit-scrollbar {
   filter: none;
 }
 
-/* 버튼 두 개 배치 */
+/* 버튼 배치 */
 .form-btn-row {
   display: flex;
   justify-content: space-between;
@@ -318,7 +317,6 @@ textarea.form-control::-webkit-scrollbar {
   width: 48%;
 }
 
-/* 기타 폼 스타일 */
 .form-row {
   display: flex;
   align-items: center;
@@ -372,7 +370,7 @@ textarea.form-control::-webkit-scrollbar {
   margin-left: 0.2rem;
 }
 
-/* 비밀번호 변경 (초록영역) 스타일 */
+/* 비밀번호 변경 */
 .change-password-link {
   margin-top: 2.3rem;
   text-align: center;
@@ -395,7 +393,7 @@ textarea.form-control::-webkit-scrollbar {
 
 .delete-button {
   display: block;
-  margin-left: auto; /* 우측 정렬 */
+  margin-left: auto;
   margin-top: 0.5rem;
   width: 120px;
 }

@@ -3,8 +3,12 @@
     <div v-if="wishlistBooks.length">
       <ul class="book-list">
         <li v-for="book in wishlistBooks" :key="book.id" class="book-item">
-          <img :src="book.cover" alt="cover" class="cover" />
-          <span>{{ book.title }}</span>
+          <RouterLink :to="{name: 'book-detail', params: {bookId: book.id}}" class="library-book-link">
+            <img :src="book.cover" alt="cover" class="cover" />
+          </RouterLink>
+          <RouterLink :to="{name: 'book-detail', params: {bookId: book.id}}" class="library-book-link">
+            <span class="book-title">{{ book.title }}</span>
+          </RouterLink>
         </li>
       </ul>
     </div>
@@ -42,6 +46,24 @@ const wishlistBooks = computed(() => {
   width: 120px;
 }
 
+.library-book-link {
+  color: #444;
+  text-decoration: none;
+}
+
+.book-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
+
+.book-title:hover {
+  text-decoration: underline;
+}
+
 .cover {
   width: 100px;
   height: 150px;
@@ -49,5 +71,10 @@ const wishlistBooks = computed(() => {
   border-radius: 8px;
   margin-bottom: 8px;
   border: 1px solid #eee;
+}
+
+.cover:hover {
+  transform: scale(1.05); /* 5% 확대 */
+  transition: transform 0.3s ease; /* 부드럽게 */
 }
 </style>

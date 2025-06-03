@@ -25,42 +25,6 @@
 
     <div class="thread-header-row">
       <h1 class="header-title">{{ thread.title }}</h1>
-      <div v-if="thread.user" class="author-hover-area">
-        <span class="author-meta">
-          작성자:
-          <strong class="author-nickname">{{ thread.user.nickname }}</strong>
-        </span>
-        <button class="popover-toggle-btn" @click="showPopover = !showPopover">
-          <img
-            src="@/assets/threads/home.png"
-            alt="더보기"
-            width="20"
-            height="20"
-          />
-        </button>
-
-        <transition name="slide-up">
-          <div v-if="showPopover" class="popover-card">
-            <RouterLink
-              :to="{
-                name: 'user-profile',
-                params: { username: thread.user.username },
-              }"
-              class="btn btn-sm btn-outline-primary"
-            >
-              프로필 보기
-            </RouterLink>
-            <button
-              v-if="accountStore.isLogin && !isMe"
-              class="btn btn-sm"
-              :class="isFollowed ? 'btn-outline-secondary' : 'btn-primary'"
-              @click.stop="onFollow"
-            >
-              {{ isFollowed ? "언팔로우" : "팔로우" }}
-            </button>
-          </div>
-        </transition>
-      </div>
     </div>
 
     <div class="thread-detail-container">
@@ -86,28 +50,61 @@
                 {{ formatDate(thread.read_date) || "미입력" }}
               </div>
             </div>
+
             <div class="thread-btns">
-              <button
-                class="like-button d-flex align-items-center gap-1 pb-1"
-                @click="toggleLike"
-              >
-                <span>{{ thread.is_liked ? "❤️" : "🤍" }}</span>
-                <span>좋아요 {{ thread.like_count }}</span>
-              </button>
-              <template v-if="canEdit">
-                <RouterLink
-                  :to="{ name: 'thread-edit', params: { threadId: thread.id } }"
-                  class="btn btn-outline-primary me-2"
-                >
-                  수정
-                </RouterLink>
+              <!-- 작성자 정보: 버튼 전체에 RouterLink -->
+              <div v-if="thread.user" class="author-profile-btn">
+                <span class="author-meta">
+                  작성자:
+                  <strong class="author-nickname">
+                    {{ thread.user.nickname }}
+                  </strong>
+                  <RouterLink
+                    :to="{
+                      name: 'user-profile',
+                      params: { username: thread.user.username },
+                    }"
+                    title="프로필 보러가기"
+                    class="profile-link-img"
+                    style="display: inline-block; margin-left: 6px"
+                  >
+                    <img
+                      src="@/assets/threads/home.png"
+                      alt="프로필"
+                      width="20"
+                      height="20"
+                      class="profile-link-icon"
+                    />
+                  </RouterLink>
+                </span>
+              </div>
+
+              <div class="thread-btn-right">
                 <button
-                  class="btn btn-outline-danger"
-                  @click="handleDeleteThread"
+                  class="like-button d-flex align-items-center gap-1 pb-1"
+                  @click="toggleLike"
                 >
-                  삭제
+                  <span>{{ thread.is_liked ? "❤️" : "🤍" }}</span>
+                  <span>좋아요 {{ thread.like_count }}</span>
                 </button>
-              </template>
+                <template v-if="canEdit">
+                  <RouterLink
+                    :to="{
+                      name: 'thread-edit',
+                      params: { threadId: thread.id },
+                    }"
+                    class="btn btn-outline-primary me-2"
+                  >
+                    수정
+                  </RouterLink>
+                  <button
+                    class="btn btn-outline-danger"
+                    @click="handleDeleteThread"
+                  >
+                    삭제
+                  </button>
+                </template>
+              </div>
             </div>
           </div>
         </div>
@@ -281,12 +278,6 @@ onBeforeUnmount(() => {
   z-index: 1;
 }
 
-.author-hover-area {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
 .thread-header-row {
   display: flex;
   align-items: center;
@@ -308,74 +299,6 @@ onBeforeUnmount(() => {
   margin: 0;
 }
 
-.popover-card {
-  position: absolute;
-  bottom: 100%;
-  right: 0;
-  margin-bottom: 8px;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 8px 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 100;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-
-  min-width: 200px;
-}
-.popover-card .btn {
-  min-width: 80px; /* "언팔로우" 기준 너비 고정 */
-  text-align: center; /* "팔로우" 텍스트 가운데 정렬 */
-  padding: 6px 10px;
-}
-
-/* 애니메이션 */
-.slide-up-enter-active,
-.slide-up-leave-active {
-  transition: all 0.2s ease;
-}
-.slide-up-enter-from,
-.slide-up-leave-to {
-  transform: translateY(6px);
-  opacity: 0;
-}
-.slide-up-enter-to,
-.slide-up-leave-from {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-/* 커버 */
-.header-cover {
-  width: 100vw;
-  height: 30vh;
-  max-height: 330px;
-  min-height: 260px;
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.header-gradient {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.7) 20%,
-    rgba(0, 0, 0, 0.25) 70%,
-    transparent 100%
-  );
-  z-index: 1;
-}
-
 .thread-detail-container {
   max-width: 1000px;
   margin: 0 auto 2.5rem;
@@ -387,7 +310,6 @@ onBeforeUnmount(() => {
   z-index: 2;
   min-height: 420px;
 }
-
 .thread-main-row {
   display: flex;
   gap: 2rem;
@@ -414,11 +336,10 @@ onBeforeUnmount(() => {
 }
 .book-side-card:hover {
   outline: 2px solid #bbb;
-  border-color: #eee; /* border는 그대로 두기 */
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-color: #eee;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
 }
-
 .book-side-img {
   width: 90px;
   height: 120px;
@@ -426,7 +347,6 @@ onBeforeUnmount(() => {
   object-fit: cover;
   margin-bottom: 0.8rem;
 }
-
 .book-side-title {
   font-weight: 600;
   font-size: 1.07rem;
@@ -434,7 +354,6 @@ onBeforeUnmount(() => {
   text-align: center;
   margin-bottom: 0.2rem;
 }
-
 .book-side-author {
   font-size: 0.93rem;
   color: #e0c38b;
@@ -451,7 +370,6 @@ onBeforeUnmount(() => {
   box-shadow: 0 2px 10px #0002;
   border-radius: 10px;
 }
-
 .thread-content-top {
   display: flex;
   flex-direction: column;
@@ -460,11 +378,9 @@ onBeforeUnmount(() => {
   border-radius: 12px;
   padding: 1.5rem 2rem;
 }
-
 .thread-content-text {
   flex: 1;
 }
-
 .thread-content {
   font-size: 1.15rem;
   color: black;
@@ -472,7 +388,6 @@ onBeforeUnmount(() => {
   line-height: 1.7;
   word-break: break-word;
 }
-
 .thread-meta {
   font-size: 0.8rem;
   color: #858484;
@@ -481,10 +396,75 @@ onBeforeUnmount(() => {
 .thread-btns {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin-top: 0.5rem;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
+@media (max-width: 600px) {
+  .thread-btns {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .thread-btn-right {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+.author-profile-btn {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 0 0 0 2px;
+  color: #444;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: default;
+  height: 40px;
+  min-width: 0;
+}
+.profile-link-img {
+  display: inline-block;
+}
+.profile-link-icon {
+  transition: filter 0.15s, box-shadow 0.15s;
+  vertical-align: middle;
+}
+
+
+.profile-link-img:hover .profile-link-icon {
+  filter: brightness(1.05) drop-shadow(0 0 6px #f069d999);
+  box-shadow: 0 0 0 2px #ffc0fa33;
+}
+
+.profile-link-img:hover ~ .author-nickname,
+.profile-link-img:focus ~ .author-nickname {
+  color: #207adf;
+  text-decoration: underline;
+}
+.author-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 1rem;
+  line-height: 1.1;
+}
+.author-nickname {
+  margin-left: 2px;
+  font-weight: bold;
+}
+
+/* --- 우측 버튼 묶음 --- */
+.thread-btn-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 .like-button {
   background: none;
   border: none;
@@ -497,35 +477,6 @@ onBeforeUnmount(() => {
 
 .mt-4 {
   margin-top: 2.5rem;
-}
-
-.popover-toggle-btn {
-  margin-left: 6px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  font-size: 1.1rem;
-  color: #555;
-  padding: 2px 6px;
-  transform: translateY(-5px);
-  border: 0.5px solid;
-}
-
-.popover-toggle-btn:hover {
-  color: #000;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-.fade-enter-to,
-.fade-leave-from {
-  opacity: 1;
 }
 
 .modal-overlay {
@@ -548,7 +499,6 @@ onBeforeUnmount(() => {
   max-width: 70vw;
   max-height: 70vh;
 }
-
 .modal-content img {
   max-width: 80%;
   max-height: 80%;

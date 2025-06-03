@@ -45,7 +45,7 @@ const router = createRouter({
     {
       path: "/profile/:username",
       name: "user-profile",
-      component: () => import("../views/ProfileView.vue"),
+      component: () => import("../views/accounts/ProfileView.vue"),
       children: [
         {
           path: "library",

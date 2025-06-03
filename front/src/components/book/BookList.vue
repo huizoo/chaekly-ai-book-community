@@ -14,32 +14,16 @@
 
     <!-- 검색창 -->
     <div class="search-bar">
-      <input v-model="search" placeholder="검색어를 입력하세요" @keyup.enter="searchBooks" />
+      <input
+        v-model="search"
+        placeholder="검색어를 입력하세요"
+        @keyup.enter="searchBooks"
+      />
     </div>
 
     <!-- 도서 리스트 -->
     <div class="book-items">
-      <RouterLink
-        v-for="book in books"
-        :key="book.id"
-        :to="{ name: 'book-detail', params: { bookId: book.id } }"
-        class="book-item-link"
-      >
-        <div class="book-item">
-          <img :src="book.cover" alt="cover" class="book-cover" />
-          <div class="book-info">
-            <h3 class="book-title">{{ book.title }}</h3>
-            <br>
-            <p>
-              <strong>저자: </strong>{{ book.author }}<br>
-              <strong>출판사: </strong>{{ book.publisher }}<br>
-              <span class="book-description">
-                <strong>설명: </strong>{{ book.description || '도서 설명이 없습니다.' }}
-              </span>
-            </p>
-          </div>
-        </div>
-      </RouterLink>
+      <BookCard v-for="book in books" :key="book.id" :book="book" />
     </div>
 
     <!-- 페이지네이션 -->
@@ -77,10 +61,11 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed, watch } from 'vue';
-import { useBookListStore } from '@/stores/books';
-import { useCategoryStore } from '@/stores/categories';
-import { RouterLink } from 'vue-router';
+import { onMounted, ref, computed, watch } from "vue";
+import { useBookListStore } from "@/stores/books";
+import { useCategoryStore } from "@/stores/categories";
+import { RouterLink } from "vue-router";
+import BookCard from '@/components/book/BookCard.vue';
 
 const bookListStore = useBookListStore();
 const categoryStore = useCategoryStore();
@@ -90,8 +75,8 @@ const pageGroupSize = 5;
 
 const books = ref([]);
 const categories = ref([]);
-const selectedCategory = ref('');
-const search = ref('');
+const selectedCategory = ref("");
+const search = ref("");
 
 let debounceTimer = null;
 
@@ -102,19 +87,17 @@ const fetchBooks = async () => {
 
 const selectCategory = async (categoryName) => {
   selectedCategory.value = categoryName;
-  bookListStore.selectedCategory = categoryName === '전체' ? '' : categoryName;
+  bookListStore.selectedCategory = categoryName === "전체" ? "" : categoryName;
   currentPage.value = 1;
   await fetchBooks();
 };
 
-
 const searchBooks = async () => {
-  if (debounceTimer) clearTimeout(debounceTimer);  // 기존 디바운싱 중단
+  if (debounceTimer) clearTimeout(debounceTimer); // 기존 디바운싱 중단
   bookListStore.currentKeyword = search.value;
   currentPage.value = 1;
   await fetchBooks();
 };
-
 
 const totalPages = computed(() => {
   const count = bookListStore.bookList.count || 1;
@@ -123,7 +106,9 @@ const totalPages = computed(() => {
 });
 
 const pageGroupStart = computed(() => {
-  return Math.floor((currentPage.value - 1) / pageGroupSize) * pageGroupSize + 1;
+  return (
+    Math.floor((currentPage.value - 1) / pageGroupSize) * pageGroupSize + 1
+  );
 });
 
 const pageGroupEnd = computed(() => {
@@ -158,14 +143,14 @@ const goToNextPage = async () => {
 };
 
 onMounted(async () => {
-  selectedCategory.value = '전체';
-  bookListStore.selectedCategory = '';
+  selectedCategory.value = "전체";
+  bookListStore.selectedCategory = "";
 
-  search.value = '';
-  bookListStore.currentKeyword = '';
+  search.value = "";
+  bookListStore.currentKeyword = "";
 
   await categoryStore.fetchCategories();
-  categories.value = [{ id: 0, name: '전체' }, ...categoryStore.categories];
+  categories.value = [{ id: 0, name: "전체" }, ...categoryStore.categories];
   await fetchBooks();
 });
 
@@ -189,13 +174,12 @@ onMounted(async () => {
 //   await fetchBooks();
 // });
 
-
 watch(search, () => {
   if (debounceTimer) clearTimeout(debounceTimer);
 
   debounceTimer = setTimeout(() => {
-    if (document.activeElement !== document.querySelector('input')) return;
-    if (search.value.trim() === '') return;
+    if (document.activeElement !== document.querySelector("input")) return;
+    if (search.value.trim() === "") return;
 
     // 검색어 멈춤 감지 후 실행
     bookListStore.currentKeyword = search.value;
@@ -203,7 +187,6 @@ watch(search, () => {
     fetchBooks();
   }, 500);
 });
-
 </script>
 
 <style scoped>

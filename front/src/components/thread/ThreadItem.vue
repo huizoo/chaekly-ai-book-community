@@ -160,8 +160,12 @@ const getFullUrl = path => {
   margin: 0 0 4px;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  white-space: normal;
 }
+
 
 .thread-meta {
   display: flex;

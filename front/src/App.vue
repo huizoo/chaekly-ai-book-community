@@ -63,12 +63,4 @@ textarea {
   display: flex;
   flex-direction: column;
 }
-
-.layout-root .container {
-  width: 1280px !important;
-  max-width: 1280px !important;
-  min-width: 1280px !important;
-  margin-left: auto;
-  margin-right: auto;
-}
 </style>

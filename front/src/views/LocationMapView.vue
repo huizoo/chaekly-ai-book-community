@@ -69,7 +69,7 @@ onMounted(getCurrentLocation);
   /* 1920*1080 환경에선 'height: 100vh' 설정, 2560*1440 환경에선 주석처리해야 함 */
   /* height: 100vh; */
   min-height: 60vh;
-  padding: 2rem 1rem;
+  padding: 3rem 1rem;
   
   /* background: linear-gradient(
     135deg,
@@ -104,6 +104,7 @@ onMounted(getCurrentLocation);
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   position: relative;
+  margin-bottom: 240px;
 }
 
 /* 에러 메시지 */
