@@ -1,39 +1,41 @@
 <template>
   <section class="edit-profile-page">
-    <div>
+    <div class="edit-profile-inner">
       <div class="edit-profile-card">
         <h2>회원정보 수정</h2>
         <form @submit.prevent="onSubmit" class="ca p-3 mb-3">
-          <div
-            class="form-row"
-            v-for="(label, field) in labelMap"
-            :key="field"
-            v-if="
-              field !== 'gender' &&
-              field !== 'introduction' &&
-              field !== 'profile_image'
-            "
-          >
-            <label>{{ label }}</label>
-            <div class="input-error-col">
-              <input
-                :type="
-                  field === 'email'
-                    ? 'email'
-                    : field === 'age'
-                    ? 'number'
-                    : 'text'
-                "
-                class="form-control"
-                v-model="form[field]"
-                :required="field === 'nickname'"
-              />
-              <div v-if="errors?.response?.data?.[field]" class="error-message">
-                {{ errors.response.data[field][0] }}
+          <template v-for="(label, field) in labelMap" :key="field">
+            <div
+              class="form-row"
+              v-if="
+                field !== 'gender' &&
+                field !== 'introduction' &&
+                field !== 'profile_image'
+              "
+            >
+              <label>{{ label }}</label>
+              <div class="input-error-col">
+                <input
+                  :type="
+                    field === 'email'
+                      ? 'email'
+                      : field === 'age'
+                      ? 'number'
+                      : 'text'
+                  "
+                  class="form-control"
+                  v-model="form[field]"
+                  :required="field === 'nickname'"
+                />
+                <div
+                  v-if="errors?.response?.data?.[field]"
+                  class="error-message"
+                >
+                  {{ errors.response.data[field][0] }}
+                </div>
               </div>
             </div>
-          </div>
-
+          </template>
           <div class="form-row">
             <label class="gender-label">성별 :</label>
             <div class="radio-group">
@@ -213,16 +215,31 @@ const onCancel = () => {
 
 <style scoped>
 .edit-profile-page {
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  min-height: 100vh;
+  width: 100vw;
   background: linear-gradient(
     135deg,
     var(--pastel-sand),
     var(--pastel-sky),
     var(--pastel-mint)
   );
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 48px;
+  padding-bottom: 120px;
+  box-sizing: border-box;
+}
+
+.edit-profile-inner {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  padding-left: 16px;
+  padding-right: 16px;
+  box-sizing: border-box;
 }
 
 .edit-profile-card {
@@ -396,5 +413,7 @@ textarea.form-control::-webkit-scrollbar {
   margin-left: auto;
   margin-top: 0.5rem;
   width: 120px;
+  position: relative;
+  right: -12px;
 }
 </style>
